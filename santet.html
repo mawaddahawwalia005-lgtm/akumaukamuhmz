@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santet Simulator v1.0</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff3333;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.7);
+        }
+
+        .input-area {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ff3333;
+            background: #2b2b2b;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            outline: none;
+        }
+
+        /* Area Boneka */
+        .doll-container {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            background: #d2b48c;
+            border-radius: 40% 40% 30% 30% / 50% 50% 20% 20%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            cursor: crosshair;
+            overflow: hidden;
+            border: 3px solid #8b4513;
+        }
+
+        /* Kepala Boneka */
+        .doll-head {
+            width: 90px;
+            height: 90px;
+            background: #c3a175;
+            border-radius: 50%;
+            margin: 15px auto 0;
+            position: relative;
+            border: 2px dashed #5c2c16;
+        }
+
+        /* Mata X */
+        .doll-head::before, .doll-head::after {
+            content: "X";
+            position: absolute;
+            top: 30px;
+            font-size: 20px;
+            color: #4a2311;
+            font-weight: bold;
+        }
+        .doll-head::before { left: 25px; }
+        .doll-head::after { right: 25px; }
+
+        /* Tulisan Nama di Dada Boneka */
+        .target-name {
+            position: absolute;
+            top: 140px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: #4a0000;
+            font-size: 18px;
+            text-transform: uppercase;
+            word-wrap: break-word;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        /* Jarum/Tusukan */
+        .pin {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #ff0000;
+            transform: translate(-50%, -50%);
+            animation: pulse 0.5s infinite alternate;
+        }
+
+        /* Efek Kilatan saat Ditusuk */
+        @keyframes pulse {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        .counter {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #ffaa00;
+        }
+
+        .btn-reset {
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: #ff3333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .btn-reset:hover { background: #cc0000; }
+    </style>
+</head>
+<body>
+
+    <h1>🔮 DIGITAL SANTET SIMULATOR 🔮</h1>
+    
+    <div class="input-area">
+        <label for="nameInput">Ketik Nama Target: </label><br><br>
+        <input type="text" id="nameInput" placeholder="Masukkan nama..." value="Si Polan" oninput="updateName()">
+    </div>
+
+    <p style="color: #aaa;">Klik pada bagian boneka untuk menusuk jarum!</p>
+
+    <!-- Wadah Boneka -->
+    <div class="doll-container" id="doll" onclick="stabDoll(event)">
+        <div class="doll-head"></div>
+        <div class="target-name" id="displayName">Si Polan</div>
+    </div>
+
+    <div class="counter">Jumlah Tusukan: <span id="stabCount">0</span></div>
+    <button class="btn-reset" onclick="resetSantet()">Cabut Semua Jarum</button>
+
+    <script>
+        let count = 0;
+
+        // Fungsi untuk update nama di dada boneka secara real-time
+        function updateName() {
+            const inputVal = document.getElementById('nameInput').value;
+            const display = document.getElementById('displayName');
+            
+            if(inputVal.trim() === "") {
+                display.innerText = "TANPA NAMA";
+            } else {
+                display.innerText = inputVal;
+            }
+        }
+
+        // Fungsi saat boneka diklik (ditusuk)
+        function stabDoll(event) {
+            const doll = document.getElementById('doll');
+            
+            // Mengambil posisi klik relatif terhadap boneka
+            const rect = doll.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // Membuat elemen jarum baru
+            const pin = document.createElement('div');
+            pin.classList.add('pin');
+            pin.style.left = x + 'px';
+            pin.style.top = y + 'px';
+
+            // Memasukkan jarum ke dalam boneka
+            doll.appendChild(pin);
+
+            // Update counter
+            count++;
+            document.getElementById('stabCount').innerText = count;
+        }
+
+        // Fungsi untuk reset / cabut jarum
+        function resetSantet() {
+            const doll = document.getElementById('doll');
+            // Hapus semua elemen dengan class 'pin'
+            const pins = document.querySelectorAll('.pin');
+            pins.forEach(pin => pin.remove());
+            
+            // Reset counter
+            count = 0;
+            document.getElementById('stabCount').innerText = count;
+        }
+    </script>
+
+</body>
+</html>
