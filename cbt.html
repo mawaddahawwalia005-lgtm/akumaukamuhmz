@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT ExamBrowser Simulation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+        }
+        /* Header simulasi Exambro */
+        .cbt-header {
+            width: 100%;
+            height: 50px;
+            background-color: #1a73e8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
+        }
+        .status-badge {
+            background-color: #34a853;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        /* Frame untuk Google Form */
+        iframe {
+            width: 100%;
+            height: calc(100% - 50px);
+            border: none;
+        }
+        /* Tombol Mulai Ujian / Fullscreen */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            text-align: center;
+        }
+        .btn-start {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="startOverlay" class="overlay">
+        <h2>CBT EXAMBROWSER SIMULATION</h2>
+        <p>Klik tombol di bawah untuk masuk ke mode ujian penuh.</p>
+        <button class="btn-start" onclick="mulaiUjian()">MASUK MODE UJIAN</button>
+    </div>
+
+    <div class="cbt-header">
+        <span>SISTEM CBT ONLINE — UTBK/SNBT SIMULATION</span>
+        <span class="status-badge">TERKUNCI (LOCKED)</span>
+    </div>
+
+    <iframe id="examFrame" src="https://docs.google.com/forms/d/e/1FAIpQLSfXXXXXXXXXXXXX/viewform?embedded=true"></iframe>
+
+    <script>
+        function mulaiUjian() {
+            let elem = document.documentElement;
+            
+            // Memaksa Chrome masuk ke mode Fullscreen penuh (menyembunyikan URL & Tab)
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Chrome/Safari HP */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+
+            // Menghilangkan overlay selamat datang
+            document.getElementById("startOverlay").style.display = "none";
+        }
+
+        // Mencegah user klik back sembarangan (mengunci history browser)
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
+            alert("Peringatan: Anda dilarang keluar dari halaman ujian!");
+        };
+    </script>
+</body>
+</html>
