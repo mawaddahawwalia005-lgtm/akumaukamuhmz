@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exambro Client - Halaman Utama</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0d253f 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* CONTAINER UTAMA MIRIP TAMPILAN HP EXAMBRO */
+        .exambro-box {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 30px 24px;
+            text-align: center;
+            border-top: 6px solid #fbbf24; /* Aksen kuning khas Exambro */
+        }
+
+        /* LOGO & JENIS APLIKASI */
+        .logo-area {
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            font-size: 3.5rem;
+            margin-bottom: 5px;
+        }
+
+        .logo-area h1 {
+            font-size: 1.6rem;
+            color: #1e3a8a;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-area p {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        /* PANEL STATUS DETEKSI SYSTEM */
+        .status-container {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .status-row:last-child { margin-bottom: 0; }
+
+        .status-ok {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        /* FORM INPUT LINK & BARCODE */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 6px;
+        }
+
+        .input-url {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+            background-color: #f9fafb;
+        }
+
+        .input-url:focus {
+            border-color: #1e3a8a;
+            background-color: #fff;
+        }
+
+        /* TOMBOL SCAN BARCODE / QR CODE */
+        .btn-scan-qr {
+            width: 100%;
+            background-color: #f3f4f6;
+            color: #1e3a8a;
+            border: 2px dashed #1e3a8a;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display
