@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Math Dungeon - Game Mainan Seru</title>
+    <style>
+        /* Gaya Visual ala Game Mainan / Konsol Retro */
+        body {
+            background-color: #ffd166;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            background-color: #118ab2;
+            border: 8px solid #073b4c;
+            border-radius: 20px;
+            padding: 25px;
+            width: 450px;
+            box-shadow: 0px 10px 0px #073b4c;
+            color: white;
+            text-align: center;
+        }
+
+        .screen {
+            background-color: #ef476f;
+            border: 4px solid #073b4c;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 180px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: inset 0px 0px 10px rgba(0,0,0,0.3);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            background-color: #073b4c;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            background-color: #06d6a0;
+            color: #073b4c;
+            border: 3px solid #073b4c;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 4px 0px #073b4c;
+            transition: all 0.1s ease;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0px 0px 0px #073b4c;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 3px solid #073b4c;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="start-screen">
+        <h2>🎮 MATH DUNGEON 🎮</h2>
+        <p>Kalahkan monster dengan kekuatan matematikamu!</p>
+        <input type="text" id="player-name" placeholder="Masukkan Nama Heromu..." required><br><br>
+        <button onclick="startGame()">MULAI PETUALANGAN</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <div class="stats">
+            <span id="stat-hp">❤️ Nyawa: 3</span>
+            <span id="stat-score">⭐ Skor: 0</span>
+        </div>
+        <div class="screen">
+            <div id="materi-title" style="font-size: 0.8rem; color: #ffd166; margin-bottom: 5px;"></div>
+            <div id="question-text">Pertanyaan akan muncul di sini...</div>
+        </div>
+        <div class="btn-grid" id="options-container">
+            </div>
+    </div>
+
+    <div id="end-screen" class="hidden">
+        <h2 id="end-title">GAME OVER</h2>
+        <p id="end-message"></p>
+        <button onclick="restartGame()">MAIN LAGI 🔄</button>
+    </div>
+</div>
+
+<script>
+    // Data Soal Matematika
+    const questionBank = [
+        { materi: "PANGKAT", q: "Sebuah ramuan ajaib menggandakan kekuatan heromu sebanyak 2⁵ kali. Berapa nilai kekuatan barumu?", options: ["10", "25", "32", "64"], answer: "32" },
+        { materi: "KUADRAT", q: "Kamu ingin membuat markas berbentuk persegi dengan luas lapangan 144 m². Berapa panjang sisi markasmu?", options: ["12 m", "14 m", "24 m", "72 m"], answer: "12 m" },
+        { materi: "MEAN (RATA-RATA)", q: "Lima monster menjatuhkan koin emas: 80, 85, 90, 75, dan 70 koin. Berapa rata-rata koin mereka?", options: ["75", "80", "85", "400"], answer: "80" },
+        { materi: "MEDIAN", q: "Skor lompatan katakmu dalam 5 kali percobaan: 5, 9, 3, 8, dan 6 meter. Berapakah nilai MEDIAN-nya?", options: ["3", "5", "6", "8"], answer: "6" },
+        { materi: "MODUS", q: "Dari peti harta, kamu mendapat 3 permata Merah, 6 Biru, dan 2 Hijau. Warna permata apa yang menjadi MODUS?", options: ["Merah", "Biru", "Hijau", "Semua sama"], answer: "Biru" },
+        { materi: "PELUANG", q: "Kamu melempar satu dadu bermata 6 untuk melangkah. Berapakah peluang munculnya angka GENAP?", options: ["1/6", "1/3", "1/2", "2/3"], answer: "1/2" },
+        { materi: "ARITMATIKA", q: "Kamu menabung koin emas dengan pola: Hari ke-1 (2 koin), hari ke-2 (5 koin), hari ke-3 (8 koin). Berapa koin di hari ke-10?", options: ["27", "29", "30", "32"], answer: "29" },
+        { materi: "FUNGSI KUADRAT", q: "Lintasan lompatan karaktermu mengikuti fungsi f(x) = -x² + 4x. Di x berapakah karaktermu mencapai titik TERTINGGI?", options: ["1", "2", "4", "-2"], answer: "2" }
+    ];
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let hp = 3;
+    let playerName = "";
+
+    function startGame() {
+        playerName = document.getElementById("player-name").value.trim() || "Hero";
+        
+        // Mengacak soal setiap kali bermain
+        currentQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+        currentQuestionIndex = 0;
+        score = 0;
+        hp = 3;
+
+        document.getElementById("start-screen").classList.add("hidden");
+        document.getElementById("game-screen").classList.remove("hidden");
+        
+        updateStats();
+        showQuestion();
+    }
+
+    function updateStats() {
+        document.getElementById("stat-hp").innerText = "❤️ Nyawa: " + hp;
+        document.getElementById("stat-score").innerText = "⭐ Skor: " + score;
+    }
+
+    function showQuestion() {
+        if (currentQuestionIndex >= currentQuestions.length || hp <= 0) {
+            endGame();
+            return;
+        }
+
+        let qData = currentQuestions[currentQuestionIndex];
+        document.getElementById("materi-title").innerText = `🎯 MATERI: ${qData.materi} [${currentQuestionIndex + 1}/${currentQuestions.length}]`;
+        document.getElementById("question-text").innerText = qData.q;
+
+        let optionsContainer = document.getElementById("options-container");
+        optionsContainer.innerHTML = "";
+
+        qData.options.forEach(opt => {
+            let btn = document.createElement("button");
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedOpt, button) {
+        let qData = currentQuestions[currentQuestionIndex];
+        let buttons = document.querySelectorAll("#options-container button");
+        
+        // Kunci tombol agar tidak bisa diklik lagi saat transisi animasi
+        buttons.forEach(btn => btn.disabled = true);
+
+        if (selectedOpt === qData.answer) {
+            button.style.backgroundColor = "#ffd166"; // Warna penanda benar
+            score += 10;
+        } else {
+            button.style.backgroundColor = "#ef476f"; // Warna penanda salah
+            hp -= 1;
+        }
+
+        updateStats();
+
+        // Jeda 1 detik sebelum lanjut soal berikutnya agar pemain tahu jawabannya benar/salah
+        setTimeout(() => {
+            currentQuestionIndex++;
+            showQuestion();
+        }, 1000);
+    }
+
+    function endGame() {
+        document.getElementById("game-screen").classList.add("hidden");
+        document.getElementById("end-screen").classList.remove("hidden");
+
+        let endTitle = document.getElementById("end-title");
+        let endMessage = document.getElementById("end-message");
+
+        if (hp > 0) {
+            endTitle.innerText = "🏆 KAMU MENANG! 🏆";
+            endMessage.innerText = `Selamat ${playerName}! Kamu berhasil menaklukkan Dungeon dengan skor sempurna ${score}! Kamu mendapatkan Mahkota Emas Matematika! 👑`;
+            endTitle.parentElement.style.backgroundColor = "#06d6a0";
+        } else {
+            endTitle.innerText = "☠️ GAME OVER ☠️";
+            endMessage.innerText = `Sayang sekali ${playerName}, kamu kehabisan nyawa di tengah jalan. Skor akhirmu: ${score}. Jangan menyerah, coba lagi! 💪`;
+            endTitle.parentElement.style.backgroundColor = "#ef476f";
+        }
+    }
+
+    function restartGame() {
+        document.getElementById("end-screen").classList.add("hidden");
+        document.getElementById("start-screen").classList.remove("hidden");
+    }
+</script>
+
+</body>
+</html>
