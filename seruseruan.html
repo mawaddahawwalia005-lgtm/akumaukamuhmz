@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendship Quest by @lliiaa_ra ✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .instagram-tag {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: #4a00e0;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+        }
+
+        /* Game Arena */
+        #game-container {
+            width: 100%;
+            height: 250px;
+            background: #111a3a;
+            border-radius: 15px;
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 3px solid #764ba2;
+        }
+
+        #star {
+            width: 45px;
+            height: 45px;
+            font-size: 30px;
+            line-height: 45px;
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.4s ease; /* Membuat perpindahan bintang bergeser mulus */
+            text-align: center;
+        }
+
+        .score-board {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #764ba2;
+        }
+
+        /* Kuis */
+        .quiz-option {
+            background: #f0f2f5;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .quiz-option:hover {
+            background: #e2e8f0;
+            border-color: #667eea;
+        }
+
+        /* Surat Akhir */
+        .letter {
+            text-align: left;
+            background: #fffafb;
+            border: 2px dashed #ffb3c1;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .letter p {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            color: #333;
+        }
+
+        .heart {
+            font-size: 3.5rem;
+            color: #ff4d6d;
+            animation: beat 0.8s infinite alternate;
+            margin-bottom: 15px;
+        }
+
+        @keyframes beat {
+            to { transform: scale(1.15); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: HALAMAN DEPAN -->
+    <div id="screen-start" class="card">
+        <div class="instagram-tag">Created by @lliiaa_ra ✨</div>
+        <h1>Friendship Quest</h1>
+        <p>Halo! Selamat datang di game tantangan spesial. Kamu harus menangkap bintang yang bergerak gesit dan menjawab pertanyaan akademis untuk membuka pesan rahasia di akhir!</p>
+        <button onclick="changeScreen('start', 'play')">Mulai Petualangan 🚀</button>
+    </div>
+
+    <!-- SCREEN 2: GAMEPLAY (MENANGKAP BINTANG) -->
+    <div id="screen-play" class="card hidden">
+        <h1>Tangkap Bintangnya! 🌟</h1>
+        <p>Bintangnya bergeser terus! Klik/Sentuh bintangnya untuk memicu soal kuis!</p>
+        <div class="score-board">Target Berhasil: <span id="score-text">0</span> / 3</div>
+        
+        <div id="game-container">
+            <div id="star" onclick="starClicked()">⭐</div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: KUIS SOAL ACAK -->
+    <div id="screen-quiz" class="card hidden">
+        <div id="quiz-subject" style="font-weight: bold; color: #764ba2; margin-bottom: 5px; text-transform: uppercase; font-size: 0.9rem;"></div>
+        <h2 id="quiz-question" style="font-size: 1.3rem; margin-bottom: 20px;">Pertanyaan</h2>
+        <div id="quiz-options">
+            <!-- Pilihan jawaban diisi via JS -->
+        </div>
+        <p id="quiz-feedback" style="margin-top: 15px; font-weight: bold; display: none;"></p>
+    </div>
+
+    <!-- SCREEN 4: HALAMAN AKHIR (SURAT) -->
+    <div id="screen-final" class="card hidden">
+        <div class="heart">❤️</div>
+        <h1 style="color: #ff4d6d;">Mission Complete! 🎉</h1>
+        <p>Kamu hebat banget! Semua soal terjawab. Ini pesan tulus yang dikunci khusus buat kamu:</p>
+        
+        <div class="letter">
+            <p>Hai...</p>
+            <p>✨ Terimakasih ya udah mau jadi temen aku yang baik.</p>
+            <p>✨ Terimakasih udah buat aku semangat.</p>
+            <p>✨ Terimakasih udah buat aku lebih baik dari sebelumnya.</p>
+            <p style="font-weight: bold; color: #ff4d6d; text-align: center; margin-top: 20px; font-size: 1.15rem;">
+                Jangan pernah asing ya?<br>Because u my best friend.
+            </p>
+            <p style="text-align: center; font-style: italic; color: #666; margin-top: 15px; font-size: 0.95rem;">
+                Sehat-sehat selalu ya teman! 🌸
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        const targetScore = 3;
+        let starInterval;
+
+        // Bank Soal Acak (Bahasa Inggris, IPA, IPS, Matematika, dll)
+        const questionsBank = [
+            { subject: "Bahasa Inggris", q: "What is the antonym of the word 'BEAUTIFUL'?", a: ["Ugly", "Pretty", "Cute", "Smart"], correct: 0 },
+            { subject: "Ilmu Knowledge Alam (Biologi)", q: "Gas apa yang paling banyak dihirup manusia saat bernapas normal?", a: ["Karbondioksida", "Oksigen", "Nitrogen", "Hidrogen"], correct: 1 },
+            { subject: "Matematika Logika", q: "Jika $3x + 5 = 20$, berapakah nilai dari $x$?", a: ["3", "4", "5", "6"], correct: 2 },
+            { subject: "Ilmu Pengetahuan Sosial (Sejarah)", q: "Negara manakah yang dijuluki sebagai Negara Kincir Angin?", a: ["Inggris", "Prancis", "Belanda", "Jepang"], correct: 2 },
+            { subject: "Bahasa Inggris", q: "Complete this phrase: 'Actions speak louder than ...'", a: ["Words", "Speak", "Voices", "Thoughts"], correct: 0 },
+            { subject: "Ilmu Pengetahuan Alam (Fisika)", q: "Pusat tata surya kita yang memancarkan cahaya sendiri adalah...", a: ["Bumi", "Bulan", "Matahari", "Mars"], correct: 2 }
+        ];
+
+        let currentQuestion = {};
+
+        function changeScreen(from, to) {
+            document.getElementById('screen-' + from).classList.add('hidden');
+            document.getElementById('screen-' + to).classList.remove('hidden');
+            
+            if (to === 'play') {
+                moveStar();
+                // Bintang bergeser otomatis setiap 1.2 detik kalau tidak diklik
+                starInterval = setInterval(moveStar, 1200);
+            } else {
+                clearInterval(starInterval);
+            }
+        }
+
+        // Fungsi membuat bintang bergeser acak di dalam kotak game
+        function moveStar() {
+            const container = document.getElementById('game-container');
+            const star = document.getElementById('star');
+            
+            const maxX = container.clientWidth - star.clientWidth;
+            const maxY = container.clientHeight - star.clientHeight;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            star.style.left = randomX + 'px';
+            star.style.top = randomY + 'px';
+        }
+
+        // Aksi ketika berhasil mengeklik bintang yang bergeser
+        function starClicked() {
+            clearInterval(starInterval); // Hentikan pergeseran sementara
+            setupQuiz();
+            changeScreen('play', 'quiz');
+        }
+
+        // Setup Soal Kuis Acak
+        function setupQuiz() {
+            const randomIndex = Math.floor(Math.random() * questionsBank.length);
+            currentQuestion = questionsBank[randomIndex];
+            
+            document.getElementById('quiz-subject').innerText = currentQuestion.subject;
+            document.getElementById('quiz-question').innerText = currentQuestion.q;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            currentQuestion.a.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-option';
+                div.innerText = option;
+                div.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(div);
+            });
+            
+            document.getElementById('quiz-feedback').style.display = 'none';
+        }
+
+        // Cek Jawaban Kuis
+        function checkAnswer(selectedIndex) {
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.style.display = 'block';
+            
+            if (selectedIndex === currentQuestion.correct) {
+                feedback.style.color = '#2ecc71';
+                feedback.innerText = "🎉 Jawaban Benar! Keren banget!";
+                score++;
+                document.getElementById('score-text').innerText = score;
+                
+                setTimeout(() => {
+                    if (score >= targetScore) {
+                        changeScreen('quiz', 'final');
+                    } else {
+                        changeScreen('quiz', 'play');
+                    }
+                }, 1500);
+            } else {
+                feedback.style.color = '#e74c3c';
+                feedback.innerText = "❌ Yah salah, ayo fokus! Coba soal lain ya.";
+                setTimeout(() => {
+                    changeScreen('quiz', 'play');
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
