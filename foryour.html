@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story Mini Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ffe5ec, #ffc2d1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 90%;
+            max-width: 450px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Bagian Animasi Karakter */
+        .stage {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 40px;
+            width: 100%;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .character {
+            font-size: 80px;
+            transition: all 0.5s ease;
+            position: relative;
+            bottom: 0;
+        }
+
+        /* Animasi Bergerak */
+        .boy { animation: floatBoy 3s ease-in-out infinite; }
+        .girl { animation: floatGirl 3s ease-in-out infinite 0.5s; }
+
+        @keyframes floatBoy {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        @keyframes floatGirl {
+            0%, 100% { transform: translateY(0) rotate(3deg); }
+            50% { transform: translateY(-12px) rotate(-3deg); }
+        }
+
+        /* Kotak Dialog */
+        .dialog-box {
+            width: 100%;
+            min-height: 120px;
+            background: #fff0f3;
+            border: 2px solid #ffb3c1;
+            border-radius: 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 16px;
+            color: #4a4a4a;
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Tombol Game */
+        .btn-next {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-next:hover {
+            background: #ff758f;
+            transform: scale(1.05);
+        }
+
+        /* Efek Hati */
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
+            animation: flyUp 2s linear forwards;
+            opacity: 0;
+        }
+
+        @keyframes flyUp {
+            0% { transform: translateY(0) scale(0); opacity: 1; }
+            100% { transform: translateY(-150px) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div class="stage" id="stage">
+            <div class="character boy" id="boy">👦🏻</div>
+            <div class="character girl" id="girl">👧🏻</div>
+        </div>
+
+        <div class="dialog-box" id="dialog-text">
+            Klik tombol di bawah untuk memulai cerita...
+        </div>
+
+        <button class="btn-next" id="next-btn" onclick="nextStage()">Mulai</button>
+    </div>
+
+    <script>
+        // Alur cerita game
+        const cerita = [
+            { teks: "Dulu, ada sebuah kisah yang berjalan perlahan...", boy: "👦🏻", girl: "👧🏻" },
+            { teks: "Setiap detiknya terasa berharga, menyimpan banyak tawa dan kenangan manis.", boy: "👦🏻💖", girl: "💖👧🏻" },
+            { teks: "Meskipun waktu terus berjalan dan keadaan mulai berubah...", boy: "🚶🏻‍♂️", girl: "🧍🏻‍♀️" },
+            { teks: "Semua memori itu tetap tersimpan rapi di dalam hati.", boy: "👦🏻", girl: "👑👧🏻" },
+            { teks: "Dan di sinilah akhir dari lembaran cerita kita...", boy: "✨👦🏻", girl: "✨👧🏻" },
+            { teks: "Hai, aku kangen. Bahagia terus ya sama wanita cantik itu. ✨❤️", boy: "👋🏻👦🏻", girl: "💃🏻" }
+        ];
+
+        let tahapanSaatIni = -1;
+
+        function nextStage() {
+            tahapanSaatIni++;
+            const dialogText = document.getElementById("dialog-text");
+            const btnNext = document.getElementById("next-btn");
+            const boyChar = document.getElementById("boy");
+            const girlChar = document.getElementById("girl");
+
+            if (tahapanSaatIni < cerita.length) {
+                dialogText.innerText = cerita[tahapanSaatIni].teks;
+                boyChar.innerText = cerita[tahapanSaatIni].boy;
+                girlChar.innerText = cerita[tahapanSaatIni].girl;
+                
+                btnNext.innerText = "Lanjut";
+
+                if (tahapanSaatIni === 1 || tahapanSaatIni === 5) {
+                    createHearts();
+                }
+
+                if (tahapanSaatIni === cerita.length - 1) {
+                    btnNext.innerText = "Selesai ✨";
+                }
+            } else {
+                tahapanSaatIni = -1;
+                dialogText.innerText = "Klik tombol di bawah untuk memulai cerita...";
+                btnNext.innerText = "Mulai Lagi";
+                boyChar.innerText = "👦🏻";
+                girlChar.innerText = "👧🏻";
+            }
+        }
+
+        function createHearts() {
+            const stage = document.getElementById("stage");
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerText = "❤️";
+                heart.style.left = Math.random() * 60 + 20 + "%";
+                heart.style.animationDelay = Math.random() * 0.5 + "s";
+                stage.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
