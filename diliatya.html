@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Kamu ✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0f0c1b;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Efek Gem Jatuh */
+        .gem {
+            position: absolute;
+            top: -20px;
+            font-size: 20px;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+
+        /* Container Utama */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.3);
+            z-index: 10;
+            transition: all 0.5s ease;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #e0aaff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(224, 170, 255, 0.5);
+            min-height: 60px;
+        }
+
+        /* Tombol Lucu */
+        .btn {
+            background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.6);
+        }
+
+        /* Gaya Video */
+        .video-wrapper {
+            display: none;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #9d4edd;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="gem-container"></div>
+
+    <div class="container">
+        <h2 id="text-display">Klik tombol di bawah ini ya... 💎</h2>
+        <button class="btn" id="next-btn" onclick="nextStage()">Klik Aku!</button>
+        
+        <div class="video-wrapper" id="video-box">
+            <video id="my-video" controls>
+                <source src="lv_7392929058507558151_20260611184913.mp4" type="video/mp4">
+                Browser kamu tidak mendukung pemutar video.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        // Daftar teks yang akan ditampilkan secara berurutan
+        const messages = [
+            "Hai, apa kabar? Semoga sehat terus ya... 😊",
+            "Lebih lama lagi ya hidup di dunianya... ✨",
+            "Aku udah ga milikin hati mu,",
+            "Setidaknya aku masih bisa ngelihat raga mu, dan kebahagiaan mu. 💜",
+            "Eh btw... kamu inget ini ga? 👇"
+        ];
+
+        let currentStage = 0;
+        const textDisplay = document.getElementById('text-display');
+        const nextBtn = document.getElementById('next-btn');
+        const videoBox = document.getElementById('video-box');
+        const myVideo = document.getElementById('my-video');
+
+        // Fungsi untuk membuat efek permata jatuh
+        function createGem() {
+            const gems = ['💎', '✨', '🔮', '⭐'];
+            const gemContainer = document.getElementById('gem-container');
+            const gem = document.createElement('div');
+            
+            gem.classList.add('gem');
+            gem.innerText = gems[Math.floor(Math.random() * gems.length)];
+            gem.style.left = Math.random() * 100 + 'vw';
+            gem.style.animationDuration = Math.random() * 2 + 3 + 's'; 
+            gem.style.opacity = Math.random();
+            
+            gemContainer.appendChild(gem);
+            
+            setTimeout(() => {
+                gem.remove();
+            }, 5000);
+        }
+
+        // Jalankan efek gem secara terus menerus
+        setInterval(createGem, 150);
+
+        // Fungsi alur teks dan kemunculan video
+        function nextStage() {
+            if (currentStage < messages.length) {
+                textDisplay.style.opacity = 0;
+                
+                setTimeout(() => {
+                    textDisplay.innerText = messages[currentStage];
+                    textDisplay.style.opacity = 1;
+                    
+                    // Jika sampai di teks terakhir, ubah tombol dan siapkan video
+                    if (currentStage === messages.length - 1) {
+                        nextBtn.innerText = "Lihat Kenangan 🎬";
+                    }
+                    currentStage++;
+                }, 300);
+
+            } else {
+                // Sembunyikan tombol dan tampilkan video game-mu
+                nextBtn.style.display = 'none';
+                videoBox.style.display = 'block';
+                myVideo.play(); // Video otomatis berputar
+            }
+        }
+    </script>
+</body>
+</html>
