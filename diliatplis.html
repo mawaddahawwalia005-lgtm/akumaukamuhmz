@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Kamu ✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #fff0f5; /* Warna pink lembut */
+            color: #4a2840;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Hujan Permata & Hati Pink */
+        .gem {
+            position: absolute;
+            top: -30px;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg); }
+        }
+
+        /* Kotak Pesan */
+        .card {
+            width: 90%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #ffb3c6;
+            border-radius: 24px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 143, 171, 0.3);
+            z-index: 10;
+        }
+
+        /* Area Teks Utama */
+        h2 {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #ff4d6d;
+            margin-bottom: 25px;
+            min-height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Tombol Pink */
+        .btn {
+            background: linear-gradient(45deg, #ff758f, #ff4d6d);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        /* Kotak Frame Video */
+        .video-container {
+            display: none;
+            margin-top: 15px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 4px solid #ff758f;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Wadah Hujan Gem -->
+    <div id="gem-rain"></div>
+
+    <div class="card">
+        <h2 id="text-box">Hai! Ada pesan manis buat kamu nih... Klik tombol di bawah ya! 🌸</h2>
+        <button class="btn" id="action-btn" onclick="jalaninPesan()">Buka Pesan ✉️</button>
+        
+        <div class="video-container" id="video-box">
+            <!-- Link video internet langsung -->
+            <video id="game-video" controls playsinline>
+                <source src="https://files.catbox.moe/q2ltb1.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <script>
+        // Untaian kata-kata sesuai alur request kamu
+        const ucapan = [
+            "Hai, apa kabar? Semoga sehat terus ya... 😊",
+            "Lebih lama lagi ya hidup di dunia nya... ✨",
+            "Aku udah ga milikin hati mu,",
+            "Setidaknya aku masih bisa ngelihat raga mu, dan kebahagiaan mu. 💜",
+            "Kamu inget ini ga? 😂👇",
+            "Lucu ya pas itu... 🤭",
+            "Tapi sayang... udah ga bisa di ulang. 🥺"
+        ];
+
+        let urutan = 0;
+        const textBox = document.getElementById('text-box');
+        const actionBtn = document.getElementById('action-btn');
+        const videoBox = document.getElementById('video-box');
+        const gameVideo = document.getElementById('game-video');
+
+        // Bikin hujan permata pink (langsung jalan otomatis)
+        function bikinGem() {
+            const listGem = ['💎', '🌸', '💖', '✨', '🎀'];
+            const container = document.getElementById('gem-rain');
+            const bola = document.createElement('div');
+            bola.classList.add('gem');
+            bola.innerText = listGem[Math.floor(Math.random() * listGem.length)];
+            bola.style.left = Math.random() * 100 + 'vw';
+            bola.style.animationDuration = Math.random() * 2 + 3 + 's'; 
+            container.appendChild(bola);
+            setTimeout(() => { bola.remove(); }, 5000);
+        }
+        setInterval(bikinGem, 150);
+
+        // Fungsi alur tombol (Instant tanpa delay transisi)
+        function jalaninPesan() {
+            if (urutan < ucapan.length) {
+                
+                // Ganti teks secara instan tanpa efek pudar biar ga macet
+                textBox.innerText = ucapan[urutan];
+                
+                if (urutan === 4) { 
+                    // Bagian "Kamu inget ini ga?" -> Munculkan video, ubah tombol
+                    videoBox.style.display = 'block';
+                    actionBtn.innerText = "Lanjut Besok/Nanti 🌸";
+                    
+                    // Coba putar otomatis
+                    gameVideo.play().catch(e => console.log("Play manual aktif"));
+                } 
+                else if (urutan === 5) {
+                    // Bagian "Lucu ya pas itu..." -> Sembunyikan video biar fokus ke teks lucunya
+                    videoBox.style.display = 'none';
+                    actionBtn.innerText = "Terakhir... 🔒";
+                } 
+                else if (urutan === 6) {
+                    // Bagian "Tapi sayang udah ga bisa diulang" -> Selesai, hilangkan tombol
+                    actionBtn.style.display = 'none';
+                } 
+                else {
+                    actionBtn.innerText = "Lanjut... 💞";
+                }
+                
+                urutan++;
+            }
+        }
+    </script>
+</body>
+</html>
