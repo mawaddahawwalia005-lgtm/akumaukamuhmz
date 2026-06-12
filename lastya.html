@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hai Kamu... ✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0b0914;
+            color: #fff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Hujan Permata & Kilauan */
+        .gem {
+            position: absolute;
+            top: -30px;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+
+        /* Kotak Pesan Romantis */
+        .card {
+            width: 90%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(187, 134, 252, 0.2);
+            border-radius: 24px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(187, 134, 252, 0.15);
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Area Teks */
+        h2 {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #e0aaff;
+            margin-bottom: 30px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 0 10px rgba(224, 170, 255, 0.4);
+            transition: opacity 0.3s ease;
+        }
+
+        /* Tombol Lucu */
+        .btn {
+            background: linear-gradient(45deg, #6200ee, #bb86fc);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(98, 0, 238, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(187, 134, 252, 0.6);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Wadah Video Game */
+        .video-container {
+            display: none;
+            margin-top: 10px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 3px solid #bb86fc;
+            box-shadow: 0 0 30px rgba(187, 134, 252, 0.5);
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tempat Gem Jatuh -->
+    <div id="gem-rain"></div>
+
+    <div class="card">
+        <h2 id="text-box">Ada pesan kecil buat kamu... Klik tombol di bawah ya! 📦</h2>
+        <button class="btn" id="action-btn" onclick="jalaninPesan()">Buka Pesan ✉️</button>
+        
+        <div class="video-container" id="video-box">
+            <!-- File video kamu dipanggil di sini -->
+            <video id="game-video" controls playsinline>
+                <source src="lv_7392929058507558151_20260611184913.mp4" type="video/mp4">
+                Wah, browser kamu ga mendukung setel video langsung nih.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        // Susunan kata-kata sesuai request kamu
+        const ucapan = [
+            "Hai, apa kabar? Semoga sehat terus ya... 😊",
+            "Lebih lama lagi ya hidup di dunia nya... ✨",
+            "Aku udah ga milikin hati mu,",
+            "Setidaknya aku masih bisa ngelihat raga mu, dan kebahagiaan mu. 💜",
+            "Kamu inget ini ga? 😂👇"
+        ];
+
+        let urutan = 0;
+        const textBox = document.getElementById('text-box');
+        const actionBtn = document.getElementById('action-btn');
+        const videoBox = document.getElementById('video-box');
+        const gameVideo = document.getElementById('game-video');
+
+        // Bikin efek gem warna-warni jatuh dari langit
+        function bikinGem() {
+            const listGem = ['💎', '✨', '🔮', '💜', '⭐'];
+            const container = document.getElementById('gem-rain');
+            const bola = document.createElement('div');
+            
+            bola.classList.add('gem');
+            bola.innerText = listGem[Math.floor(Math.random() * listGem.length)];
+            bola.style.left = Math.random() * 100 + 'vw';
+            bola.style.animationDuration = Math.random() * 2 + 3 + 's'; 
+            bola.style.opacity = Math.random() * 0.8 + 0.2;
+            bola.style.fontSize = Math.random() * 8 + 16 + 'px';
+            
+            container.appendChild(bola);
+            
+            setTimeout(() => { bola.remove(); }, 5000);
+        }
+        setInterval(bikinGem, 130);
+
+        // Alur pas tombol diklik
+        function jalaninPesan() {
+            if (urutan < ucapan.length) {
+                textBox.style.opacity = 0;
+                
+                setTimeout(() => {
+                    textBox.innerText = ucapan[urutan];
+                    textBox.style.opacity = 1;
+                    
+                    if (urutan === ucapan.length - 1) {
+                        actionBtn.innerText = "Nonton Ini Definisinya Kebahagiaan 🎬";
+                    } else {
+                        actionBtn.innerText = "Lanjut... 👉";
+                    }
+                    urutan++;
+                }, 250);
+
+            } else {
+                // Sembunyikan tombol, ganti memunculkan videonya
+                actionBtn.style.display = 'none';
+                videoBox.style.display = 'block';
+                
+                // Setel volume penuh dan putar paksa biar suaranya langsung keluar!
+                gameVideo.muted = false;
+                gameVideo.volume = 1.0;
+                
+                gameVideo.play().catch(err => {
+                    console.log("Browser kamu nahan autoplay, tapi gapapa, tinggal klik play manual di videonya!");
+                });
+            }
+        }
+    </script>
+</body>
+</html>
